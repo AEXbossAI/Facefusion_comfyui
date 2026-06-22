@@ -91,14 +91,14 @@ class SwapFaceImage:
 				target_cv2 = tensor_to_cv2(target_tensor)
 				
 				# NSFW content detection
-				is_source_nsfw = analyse_frame(source_cv2)
-				is_target_nsfw = analyse_frame(target_cv2)
+				#is_source_nsfw = analyse_frame(source_cv2)
+				#is_target_nsfw = analyse_frame(target_cv2)
 				
-				if is_source_nsfw or is_target_nsfw:
-					print("[ContentFilter] NSFW content detected - returning blurred output")
+				#if is_source_nsfw or is_target_nsfw:
+					#print("[ContentFilter] NSFW content detected - returning blurred output")
 					# Return blurred version of target
-					blurred = blur_frame(target_cv2)
-					return cv2_to_tensor(blurred)
+					#blurred = blur_frame(target_cv2)
+					#return cv2_to_tensor(blurred)
 				
 				# Perform local face swap
 				result_cv2 = swap_faces_local(
