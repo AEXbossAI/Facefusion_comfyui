@@ -1,3 +1,4 @@
+from .nodes.face_enhance_node import FaceEnhanceNode
 from .core import (
 	SwapFaceImage, SwapFaceVideo,
 	AdvancedSwapFaceImage, AdvancedSwapFaceVideo,
@@ -18,7 +19,8 @@ NODE_CLASS_MAPPINGS : NodeClassMapping =\
 	'FaceSwapApplier': FaceSwapApplier,
 	'PixelBoostNode': PixelBoostNode,
 	'FaceDataVisualizer': FaceDataVisualizer,
-	'FaceMaskVisualizer': FaceMaskVisualizer
+	'FaceMaskVisualizer': FaceMaskVisualizer,
+	'FaceEnhanceNode': FaceEnhanceNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS : NodeDisplayNameMapping =\
@@ -34,5 +36,6 @@ NODE_DISPLAY_NAME_MAPPINGS : NodeDisplayNameMapping =\
 	'FaceSwapApplier': 'FF: Face Swap Applier',
 	'PixelBoostNode': 'FF: Pixel Boost',
 	'FaceDataVisualizer': 'FF: Visualize Faces',
-	'FaceMaskVisualizer': 'FF: Visualize Face Mask'
+	'FaceMaskVisualizer': 'FF: Visualize Face Mask',
+	'FaceEnhanceNode': 'FF: Face Enhance (GFPGAN)',
 }
