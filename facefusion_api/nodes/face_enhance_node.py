@@ -27,12 +27,13 @@ class FaceEnhanceNode:
             print(f"[FaceEnhance] gfpgan not installed: {e}")
             return (image,)
 
-        # standard ComfyUI location
-        model_path = "/opt/ComfyUI/models/facerestore_models/GFPGANv1.4.pth"
+        # model lives next to other FF models in custom_nodes/Facefusion_comfyui/models/
+        model_path = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), "..", "..", "models", "GFPGANv1.4.pth"
+        ))
         if not os.path.exists(model_path):
-            # fallback: relative from this file up to ComfyUI root
-            root = os.path.abspath(os.path.join(os.path.dirname(__file__), *[".."] * 5))
-            model_path = os.path.join(root, "models", "facerestore_models", "GFPGANv1.4.pth")
+            # fallback: standard ComfyUI facerestore_models
+            model_path = "/opt/ComfyUI/models/facerestore_models/GFPGANv1.4.pth"
 
         if not os.path.exists(model_path):
             print(f"[FaceEnhance] GFPGANv1.4.pth not found at {model_path}")
