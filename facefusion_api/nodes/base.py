@@ -11,7 +11,24 @@ import numpy as np
 from comfy.comfy_types import IO
 from comfy_api.input_impl.video_types import VideoFromComponents
 from comfy_api.util import VideoComponents
-from comfy_api_nodes.util import bytesio_to_image_tensor, tensor_to_bytesio
+from PIL import Image as _PIL_Image
+
+def bytesio_to_image_tensor(buffer):
+    import numpy as np, torch
+    img = _PIL_Image.open(buffer).convert("RGB")
+    arr = np.array(img).astype("float32") / 255.0
+    return torch.from_numpy(arr).unsqueeze(0)
+
+def tensor_to_bytesio(tensor, mime_type="image/png"):
+    import numpy as np, io as _io
+    arr = (tensor.squeeze(0).cpu().numpy() * 255).clip(0, 255).astype("uint8")
+    img = _PIL_Image.fromarray(arr)
+    buf = _io.BytesIO()
+    fmt = {"image/png": "PNG", "image/webp": "WEBP", "image/jpeg": "JPEG"}.get(mime_type, "PNG")
+    img.save(buf, format=fmt)
+    buf.seek(0)
+    return buf
+
 from httpx import Client as HttpClient, Headers
 from httpx_retries import Retry, RetryTransport
 from torch import Tensor
