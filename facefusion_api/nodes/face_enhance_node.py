@@ -3,8 +3,28 @@ import torch
 import numpy as np
 
 
+def _patch_basicsr():
+    """Fix basicsr compatibility with torchvision>=0.16 (functional_tensor removed)."""
+    try:
+        import basicsr
+        deg_path = os.path.join(os.path.dirname(basicsr.__file__), "data", "degradations.py")
+        if os.path.exists(deg_path):
+            with open(deg_path) as f:
+                src = f.read()
+            old = "from torchvision.transforms.functional_tensor import rgb_to_grayscale"
+            new = "from torchvision.transforms.functional import rgb_to_grayscale"
+            if old in src:
+                with open(deg_path, "w") as f:
+                    f.write(src.replace(old, new))
+                print("[FaceEnhance] patched basicsr/data/degradations.py")
+    except Exception as e:
+        print(f"[FaceEnhance] basicsr patch skipped: {e}")
+
+
+_patch_basicsr()
+
+
 class FaceEnhanceNode:
-    """Enhance/restore face region using GFPGAN after face swap."""
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -32,7 +52,6 @@ class FaceEnhanceNode:
             os.path.dirname(__file__), "..", "..", "models", "GFPGANv1.4.pth"
         ))
         if not os.path.exists(model_path):
-            # fallback: standard ComfyUI facerestore_models
             model_path = "/opt/ComfyUI/models/facerestore_models/GFPGANv1.4.pth"
 
         if not os.path.exists(model_path):
